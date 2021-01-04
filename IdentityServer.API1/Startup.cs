@@ -32,6 +32,20 @@ namespace IdentityServer.API1
                 opts.Authority = "https://localhost:5001"; // bir token geldiði zaman bu api'ya burdaki yetkiliden public key alýcak.Arkasýndan jwtdeki private key ile imzalanmýþ olan jwtnin public keyiyle doðrulalacak kilit anahtar iliþkisi sayesinde.
                 opts.Audience = "resource_api1";
             });
+
+            services.AddAuthorization(opts =>
+            {
+                opts.AddPolicy("ReadProduct", policy =>
+                 {
+                     policy.RequireClaim("scope", "api1.read");
+                 });
+
+
+                opts.AddPolicy("UpdateOrCreate", policy =>
+               {
+                   policy.RequireClaim("scope", new[] { "api1.update", "api1.create" });
+               });
+            });
             services.AddControllers();
         }
 
