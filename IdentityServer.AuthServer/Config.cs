@@ -1,7 +1,9 @@
 ﻿using IdentityServer4.Models;
+using IdentityServer4.Test;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace IdentityServer.AuthServer
@@ -54,6 +56,34 @@ namespace IdentityServer.AuthServer
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
                     AllowedScopes = {"api1.read","api2.write","api2.update"}
                 }
+            };
+        }
+
+
+
+        public static IEnumerable<IdentityResource> GetIdentityResources()
+        {
+            return new List<IdentityResource>()
+            {
+                new IdentityResources.OpenId(), // subId
+                new IdentityResources.Profile()
+            };
+
+        }
+
+        public static IEnumerable<TestUser> GetUsers()
+        {
+            return new List<TestUser>()
+            {
+                new TestUser{SubjectId = "1", Username = "sametirkoren" , Password = "password" , Claims=  new List<Claim>(){
+                    new Claim("given_name","Samet"),
+                    new Claim("family_name","İrkören")
+                }},
+
+                 new TestUser{SubjectId = "2", Username = "medetirkoren" , Password = "password" , Claims=  new List<Claim>(){
+                    new Claim("given_name","Medet"),
+                    new Claim("family_name","İrkören")
+                }}
             };
         }
     }
