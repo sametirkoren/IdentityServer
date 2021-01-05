@@ -67,7 +67,7 @@ namespace IdentityServer.AuthServer
                    AllowedGrantTypes= GrantTypes.Hybrid,
                    RedirectUris=new  List<string>{ "https://localhost:5003/signin-oidc" },
                    PostLogoutRedirectUris=new List<string>{ "https://localhost:5003/signout-callback-oidc" },
-                   AllowedScopes = {IdentityServerConstants.StandardScopes.OpenId, IdentityServerConstants.StandardScopes.Profile, "api1.read",IdentityServerConstants.StandardScopes.OfflineAccess},
+                   AllowedScopes = {IdentityServerConstants.StandardScopes.OpenId, IdentityServerConstants.StandardScopes.Profile, "api1.read",IdentityServerConstants.StandardScopes.OfflineAccess,"CountryAndCity"},
                    AccessTokenLifetime=2*60*60,
                    AllowOfflineAccess=true,
                    RefreshTokenUsage=TokenUsage.ReUse,
@@ -85,7 +85,8 @@ namespace IdentityServer.AuthServer
             return new List<IdentityResource>()
             {
                 new IdentityResources.OpenId(), // subId
-                new IdentityResources.Profile()
+                new IdentityResources.Profile(),
+                new IdentityResource(){Name="CountryAndCity",DisplayName="Country and City" , Description = "Kullanıcının ülke ve şehir bilgisi",UserClaims= new[] {"country","city"}}
             };
 
         }
@@ -96,12 +97,16 @@ namespace IdentityServer.AuthServer
             {
                 new TestUser{SubjectId = "1", Username = "sametirkoren" , Password = "password" , Claims=  new List<Claim>(){
                     new Claim("given_name","Samet"),
-                    new Claim("family_name","İrkören")
+                    new Claim("family_name","İrkören"),
+                    new Claim("country" , "Türkiye"),
+                    new Claim("city" , "İstanbul")
                 }},
 
                  new TestUser{SubjectId = "2", Username = "medetirkoren" , Password = "password" , Claims=  new List<Claim>(){
                     new Claim("given_name","Medet"),
-                    new Claim("family_name","İrkören")
+                    new Claim("family_name","İrkören"),
+                        new Claim("country" , "Türkiye"),
+                    new Claim("city" , "Bursa")
                 }}
             };
         }
