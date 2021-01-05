@@ -59,13 +59,21 @@ namespace IdentityServer.AuthServer
                 },
                  new Client()
                  {
+
                     ClientId = "Client1-Mvc",
                     RequirePkce =false,
                     ClientName = "Client 1 app mvc uygulaması",
-                    ClientSecrets = new [] {new Secret("secret".Sha256())},
-                    AllowedGrantTypes = GrantTypes.Hybrid,
-                    RedirectUris = new List<string>{ "https://localhost:5003/signin-oidc" },
-                    AllowedScopes = {IdentityServerConstants.StandardScopes.OpenId,IdentityServerConstants.StandardScopes.Profile , "api1.read"}
+                    ClientSecrets=new[] {new Secret("secret".Sha256())},
+                   AllowedGrantTypes= GrantTypes.Hybrid,
+                   RedirectUris=new  List<string>{ "https://localhost:5003/signin-oidc" },
+                   PostLogoutRedirectUris=new List<string>{ "https://localhost:5003/signout-callback-oidc" },
+                   AllowedScopes = {IdentityServerConstants.StandardScopes.OpenId, IdentityServerConstants.StandardScopes.Profile, "api1.read",IdentityServerConstants.StandardScopes.OfflineAccess},
+                   AccessTokenLifetime=2*60*60,
+                   AllowOfflineAccess=true,
+                   RefreshTokenUsage=TokenUsage.ReUse,
+                   RefreshTokenExpiration=TokenExpiration.Absolute,
+                   AbsoluteRefreshTokenLifetime=(int) (DateTime.Now.AddDays(60)-DateTime.Now).TotalSeconds,
+                   RequireConsent = true
                  }
             };
         }
