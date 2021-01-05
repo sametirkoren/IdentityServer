@@ -5,12 +5,16 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using IdentityModel.Client;
 using IdentityServer.Client1.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Newtonsoft.Json;
 
 namespace IdentityServer.Client1.Controllers
 {
+    [Authorize]
     public class ProductController : Controller
     {
         private readonly IConfiguration _configuration;
@@ -26,27 +30,30 @@ namespace IdentityServer.Client1.Controllers
             List<Product> products = new List<Product>();
             HttpClient httpClient = new HttpClient();
 
-            var discovery = await httpClient.GetDiscoveryDocumentAsync("https://localhost:5001");
-            if(discovery.IsError)
-            {
-                // loglama yap
-            }
+            var accessToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.RefreshToken);
 
-            ClientCredentialsTokenRequest clientCredentialsTokenRequest = new ClientCredentialsTokenRequest();
+            //var discovery = await httpClient.GetDiscoveryDocumentAsync("https://localhost:5001");
+            //if(discovery.IsError)
+            //{
+            //    // loglama yap
+            //}
 
-            clientCredentialsTokenRequest.ClientId = _configuration["Client:ClientId"];
-            clientCredentialsTokenRequest.ClientSecret = _configuration["Client:ClientSecret"];
-            clientCredentialsTokenRequest.Address = discovery.TokenEndpoint;
+            //ClientCredentialsTokenRequest clientCredentialsTokenRequest = new ClientCredentialsTokenRequest();
 
-            var token = await httpClient.RequestClientCredentialsTokenAsync(clientCredentialsTokenRequest);
+            //clientCredentialsTokenRequest.ClientId = _configuration["Client:ClientId"];
+            //clientCredentialsTokenRequest.ClientSecret = _configuration["Client:ClientSecret"];
+            //clientCredentialsTokenRequest.Address = discovery.TokenEndpoint;
 
-            if (token.IsError)
-            {
-                // loglama yap
-            }
+            //var token = await httpClient.RequestClientCredentialsTokenAsync(clientCredentialsTokenRequest);
 
-            httpClient.SetBearerToken(token.AccessToken);
+            //if (token.IsError)
+            //{
+            //    // loglama yap
+            //}
 
+            //httpClient.SetBearerToken(token.AccessToken);
+
+            httpClient.SetBearerToken(accessToken);
 
             var response = await httpClient.GetAsync("https://localhost:5007/api/product/getproducts");
 
