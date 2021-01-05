@@ -67,7 +67,7 @@ namespace IdentityServer.AuthServer
                    AllowedGrantTypes= GrantTypes.Hybrid,
                    RedirectUris=new  List<string>{ "https://localhost:5003/signin-oidc" },
                    PostLogoutRedirectUris=new List<string>{ "https://localhost:5003/signout-callback-oidc" },
-                   AllowedScopes = {IdentityServerConstants.StandardScopes.OpenId, IdentityServerConstants.StandardScopes.Profile, "api1.read",IdentityServerConstants.StandardScopes.OfflineAccess,"CountryAndCity"},
+                   AllowedScopes = {IdentityServerConstants.StandardScopes.OpenId, IdentityServerConstants.StandardScopes.Profile, "api1.read",IdentityServerConstants.StandardScopes.OfflineAccess,"CountryAndCity","Roles"},
                    AccessTokenLifetime=2*60*60,
                    AllowOfflineAccess=true,
                    RefreshTokenUsage=TokenUsage.ReUse,
@@ -86,7 +86,8 @@ namespace IdentityServer.AuthServer
             {
                 new IdentityResources.OpenId(), // subId
                 new IdentityResources.Profile(),
-                new IdentityResource(){Name="CountryAndCity",DisplayName="Country and City" , Description = "Kullanıcının ülke ve şehir bilgisi",UserClaims= new[] {"country","city"}}
+                new IdentityResource(){Name="CountryAndCity",DisplayName="Country and City" , Description = "Kullanıcının ülke ve şehir bilgisi",UserClaims= new[] {"country","city"}},
+                new IdentityResource(){Name="Roles",DisplayName="Roles",Description="Kullanıcı Rolleri",UserClaims=new[]{"role"}}
             };
 
         }
@@ -99,14 +100,17 @@ namespace IdentityServer.AuthServer
                     new Claim("given_name","Samet"),
                     new Claim("family_name","İrkören"),
                     new Claim("country" , "Türkiye"),
-                    new Claim("city" , "İstanbul")
+                    new Claim("city" , "İstanbul"),
+                    new Claim("role","Admin")
                 }},
 
                  new TestUser{SubjectId = "2", Username = "medetirkoren" , Password = "password" , Claims=  new List<Claim>(){
                     new Claim("given_name","Medet"),
                     new Claim("family_name","İrkören"),
                         new Claim("country" , "Türkiye"),
-                    new Claim("city" , "Bursa")
+                    new Claim("city" , "Bursa"),
+                    new Claim("role","Customer")
+
                 }}
             };
         }
