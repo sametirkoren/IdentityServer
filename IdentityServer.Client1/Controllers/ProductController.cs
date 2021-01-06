@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using IdentityModel.Client;
 using IdentityServer.Client1.Models;
+using IdentityServer.Client1.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,19 +19,23 @@ namespace IdentityServer.Client1.Controllers
     public class ProductController : Controller
     {
         private readonly IConfiguration _configuration;
+        private readonly IApiResourceHttpClient _apiResourceHttpClient;
 
-        public ProductController(IConfiguration configuration)
+        public ProductController(IConfiguration configuration, IApiResourceHttpClient apiResourceHttpClient)
         {
             _configuration = configuration;
+            _apiResourceHttpClient = apiResourceHttpClient;
         }
 
         public async Task<IActionResult> Index()
         {
-
+            HttpClient client = await _apiResourceHttpClient.GetHttpClient();
             List<Product> products = new List<Product>();
-            HttpClient httpClient = new HttpClient();
+            
 
-            var accessToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.RefreshToken);
+            //HttpClient httpClient = new HttpClient();
+
+            //var accessToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.RefreshToken);
 
             //var discovery = await httpClient.GetDiscoveryDocumentAsync("https://localhost:5001");
             //if(discovery.IsError)
@@ -53,9 +58,9 @@ namespace IdentityServer.Client1.Controllers
 
             //httpClient.SetBearerToken(token.AccessToken);
 
-            httpClient.SetBearerToken(accessToken);
+            //httpClient.SetBearerToken(accessToken);
 
-            var response = await httpClient.GetAsync("https://localhost:5007/api/product/getproducts");
+            var response = await client.GetAsync("https://localhost:5007/api/product/getproducts");
 
 
             if (response.IsSuccessStatusCode)

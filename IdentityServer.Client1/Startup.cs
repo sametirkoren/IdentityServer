@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using IdentityServer.Client1.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -24,6 +25,9 @@ namespace IdentityServer.Client1
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.AddHttpContextAccessor();
+            services.AddScoped<IApiResourceHttpClient, ApiResourceHttpClient>();
 
             services.AddAuthentication(opts =>
             {
